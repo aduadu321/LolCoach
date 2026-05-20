@@ -369,7 +369,7 @@ public partial class MainWindow : Window
         public string OllamaUrl { get; set; } = "http://localhost:11434";
         public string OllamaModel { get; set; } = "gemma3:12b";
         public string GroqModel { get; set; } = "llama-3.3-70b-versatile";
-        public string ClaudeModel { get; set; } = "claude-sonnet-4-6";
+        public string ClaudeModel { get; set; } = "claude-opus-4-7";
         public int PollIntervalMs { get; set; } = 2000;
         public int CoachCooldownMs { get; set; } = 4000;
         public string Language { get; set; } = "ro";

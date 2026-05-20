@@ -331,8 +331,9 @@ public class CoachService : IDisposable
         var body = new
         {
             model = _config.ClaudeModel,
-            max_tokens = 80,
+            max_tokens = 120,
             stream = true,
+            metadata = new { user_id = "lolcoach" },
             system = new object[]
             {
                 new { type = "text", text = "You are Claude Code, Anthropic's official CLI for Claude." },
