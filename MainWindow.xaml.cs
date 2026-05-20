@@ -1,7 +1,9 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using LolCoach.Models;
 using LolCoach.Services;
@@ -27,6 +29,15 @@ public partial class MainWindow : Window
     private bool _coachRunning;
     private readonly LinkedList<(DateTime At, string Text)> _history = new();
 
+    private bool _clickThrough;
+    private const int GWL_EXSTYLE = -20;
+    private const int WS_EX_TRANSPARENT = 0x00000020;
+    private const int WS_EX_TOOLWINDOW = 0x00000080;
+    private const int WS_EX_NOACTIVATE = 0x08000000;
+    private const int WS_EX_LAYERED = 0x00080000;
+    [DllImport("user32.dll")] private static extern int GetWindowLong(IntPtr hwnd, int index);
+    [DllImport("user32.dll")] private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
     public MainWindow()
     {
         InitializeComponent();
@@ -36,12 +47,57 @@ public partial class MainWindow : Window
         _riot = new RiotApiService(cfg.RiotPlatform, cfg.RiotRegional);
         _coachCooldownMs = cfg.CoachCooldownMs;
 
+        // Lower process priority so we don't compete with LoL for CPU.
+        try { System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal; } catch { }
+
+        Loaded += (_, _) => ApplyOverlayStyles();
+        KeyDown += OnGlobalKeyDown;
+        // Also catch F8 even when window doesn't have focus.
+        PreviewKeyDown += OnGlobalKeyDown;
+
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(cfg.PollIntervalMs) };
         _timer.Tick += async (_, _) => await TickAsync();
         _timer.Start();
         _ = Task.Run(() => _coach.PrewarmAsync()); // keep model hot in VRAM
         _ = Task.Run(() => _meta.EnsureInitAsync()); // pre-warm Data Dragon
         Closed += (_, _) => { _live.Dispose(); _coach.Dispose(); _riot.Dispose(); _meta.Dispose(); _ugg.Dispose(); };
+    }
+
+    private void ApplyOverlayStyles()
+    {
+        var hwnd = new WindowInteropHelper(this).Handle;
+        if (hwnd == IntPtr.Zero) return;
+        // Mark as a tool window that never steals focus — matches Mobalytics/Blitz overlay pattern.
+        var ex = GetWindowLong(hwnd, GWL_EXSTYLE);
+        ex |= WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE | WS_EX_LAYERED;
+        SetWindowLong(hwnd, GWL_EXSTYLE, ex);
+    }
+
+    private void SetClickThrough(bool on)
+    {
+        _clickThrough = on;
+        var hwnd = new WindowInteropHelper(this).Handle;
+        if (hwnd == IntPtr.Zero) return;
+        var ex = GetWindowLong(hwnd, GWL_EXSTYLE);
+        if (on) ex |= WS_EX_TRANSPARENT;
+        else    ex &= ~WS_EX_TRANSPARENT;
+        SetWindowLong(hwnd, GWL_EXSTYLE, ex);
+        TxtStatus.Text = on ? "  · click-through ON (F8 to toggle)" : "  · live";
+    }
+
+    private void OnGlobalKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F8)
+        {
+            SetClickThrough(!_clickThrough);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.F9)
+        {
+            // Toggle visibility entirely.
+            Visibility = Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            e.Handled = true;
+        }
     }
 
     private static AppCfg LoadConfig()
