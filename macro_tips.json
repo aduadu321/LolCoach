@@ -1,0 +1,170 @@
+{
+  "_meta": "Romanian macro tip library. Tags: wave, vision, recall, drake, herald, baron, spike, roam, ff, teamfight, role:{top|jg|mid|adc|sup}, phase:{early|mid|late}",
+  "tips": [
+    {
+      "id": "wave-freeze-when-behind",
+      "tags": ["wave", "phase:early", "phase:mid", "role:top", "role:mid", "role:adc"],
+      "tip": "Dacă ești în spate (gold/level deficit), freeze valul lângă turela ta (3-4 minioni inamici peste, 1-2 ai tăi). Stai în spatele valului, last-hit doar minionii ON-DEATH. Forțează adversarul să overextend → gank ușor."
+    },
+    {
+      "id": "wave-slow-push-pre-objective",
+      "tags": ["wave", "phase:mid", "drake", "herald", "baron"],
+      "tip": "Cu 60-90s înainte de obiectiv (drake/herald/baron), slow push valul tău cu 2-3 atacuri pe minionul cannon. Când obiectivul spawnează, ai val mare care îți distrage adversarii de la obiectiv."
+    },
+    {
+      "id": "wave-fast-push-after-kill",
+      "tags": ["wave", "spike", "phase:early", "phase:mid"],
+      "tip": "După kill/sumar adversar mort, fast push valul în turela inamică, ia plate-uri (3 plate-uri = 480g + experiență) ȘI recall pentru tempo. Nu rămâne în lane fără minioni, e gold pierdut."
+    },
+    {
+      "id": "wave-reset-after-cs-deficit",
+      "tags": ["wave", "phase:mid", "role:top", "role:mid"],
+      "tip": "Dacă pierzi CS sub turela ta, scoate valul (push fast) ca să resetezi: forțezi adversarul să-l împingă înapoi, ai timp să recall + ai val safe la return."
+    },
+    {
+      "id": "wave-bounce-back",
+      "tags": ["wave", "phase:early"],
+      "tip": "Când vrei să faci valul să bounce înapoi la tine: lasă 2 valuri să se acumuleze, apoi push hard. Va bounce off turela inamică și revine spre tine în 30-45s, perfect pentru freeze."
+    },
+    {
+      "id": "drake-infernal-prio",
+      "tags": ["drake", "phase:mid"],
+      "tip": "Drake INFERNAL = priority cel mai mare (+8% bonus AD/AP per stack). Forțează lupta sau cere jungler să-l ia. Adversarii care îl iau capătă damage spike major."
+    },
+    {
+      "id": "drake-ocean-low-prio",
+      "tags": ["drake", "phase:mid"],
+      "tip": "Drake OCEAN (regen) e prioritate scăzută. Dacă lupta e nesigură, lasă-l. Mai bine păstrează tempo decât să dai 2 morți pe drake."
+    },
+    {
+      "id": "drake-mountain-mid-prio",
+      "tags": ["drake", "phase:mid", "phase:late"],
+      "tip": "Drake MOUNTAIN (+armor/MR) prioritate medie. Devine critic dacă există drake soul probabil mountain. Vezi câte drake-uri sunt deja luate."
+    },
+    {
+      "id": "drake-soul-must-take",
+      "tags": ["drake", "phase:late"],
+      "tip": "La 3 drake-uri = NEXT drake e SOUL POINT. Echipa care ia drake-ul 4 capătă DRAGON SOUL (efect permanent). Cheamă echipa, ward jungla inamică, dă 100% pe drake."
+    },
+    {
+      "id": "drake-elder-priority",
+      "tags": ["drake", "phase:late"],
+      "tip": "Elder Drake (după soul) dă executare la HP scăzut + true damage burn. Echipa care ÎL ia câștigă teamfight aproape sigur. La elder, fă ward în pit-ul drake-ului cu 60s înainte."
+    },
+    {
+      "id": "herald-take-first-15min",
+      "tags": ["herald", "phase:early", "phase:mid"],
+      "tip": "Herald dispare la 14:00. Ia herald-ul ÎNTOTDEAUNA dacă e safe → spawnează la 13:00 ca shop-able 'Eye of the Herald' → folosește pe lane-ul cu cel mai mult plate (top sau mid)."
+    },
+    {
+      "id": "herald-use-on-plates",
+      "tags": ["herald", "phase:mid"],
+      "tip": "Folosește Herald-ul SOLO charge înainte de minutul 14 (plate-urile cad la 14:00 indiferent). Charge-ul dă 200+ damage la turelă = ~2 plate-uri instant + setup pentru următoarele."
+    },
+    {
+      "id": "baron-conditions",
+      "tags": ["baron", "phase:late"],
+      "tip": "Ia Baron DOAR dacă: (1) 1-2 inamici morți cu respawn > 20s, SAU (2) avem advantaj clear gold/items, SAU (3) păstrăm timer-ul pentru side-lane push. NU baron 5v5 fără un pick înainte."
+    },
+    {
+      "id": "baron-buff-use",
+      "tags": ["baron", "phase:late"],
+      "tip": "Buff-ul de Baron face SUPER minioni (foarte tanky, push automat). FOLOSEȘTE-L: împarte echipa pe side-lane-uri să push către inhibitor. Nu sta grupată mid când ai baron."
+    },
+    {
+      "id": "recall-after-cs-batch",
+      "tags": ["recall", "phase:early"],
+      "tip": "Recall timing optim: după ce iei o undă de minioni completă (6 minioni), HP < 60%, valul împins spre turela lor. Nu recall cu 2 minioni în val = pierzi CS și exp."
+    },
+    {
+      "id": "recall-after-spike-gold",
+      "tags": ["recall", "spike", "phase:early"],
+      "tip": "Recall când ai exact gold-ul pentru componenta mare: ex. Sheen 700g, Tiamat 1200g, Pickaxe 875g. NU recall cu 350g - irosești tempo. Stai în lane până ai un item complet."
+    },
+    {
+      "id": "recall-before-gank-window",
+      "tags": ["recall", "vision"],
+      "tip": "Vezi junglerul inamic pe top side → recall imediat dacă ești bot, sau push înainte de minutul 3 ca să nu prinzi gank fără summs."
+    },
+    {
+      "id": "ward-river-2min",
+      "tags": ["vision", "phase:early", "role:top", "role:mid"],
+      "tip": "Pune ward-ul în river bush la 1:30-2:00 (înainte de prima undă să ajungă). Vede jungler-ul cum face leash/start. Crucial pentru a anticipa primul gank la 3:00-3:30."
+    },
+    {
+      "id": "ward-tribush-toplane",
+      "tags": ["vision", "role:top", "phase:early", "phase:mid"],
+      "tip": "TOP: ward în tribush (lateral, partea junglei tale) când tu împingi - de acolo vine gankul. Când tu freeze, ward în river. Switch wards după wave state."
+    },
+    {
+      "id": "ward-dragon-pit-pre-spawn",
+      "tags": ["vision", "drake", "phase:mid"],
+      "tip": "Ward în dragon pit la 4:30 (drake spawnează la 5:00). Apoi re-ward cu 60s înainte de fiecare drake. Fără vision pe pit = ești în orb."
+    },
+    {
+      "id": "ward-defensive-when-deep",
+      "tags": ["vision", "role:sup", "phase:mid"],
+      "tip": "Când împingi adânc, ward în jungla LOR (defensiv). Tribush + raptor pit. Asta îți dă timp să fugi când vin pentru gank."
+    },
+    {
+      "id": "ward-cleanse-control-ward",
+      "tags": ["vision", "phase:mid", "phase:late"],
+      "tip": "Pune CONTROL WARD (pink) la fiecare obiectiv major (drake/baron/herald). Distruge control ward-urile inamice. 1 pink = $1 gold extra dar invizibilitate completă în zonă."
+    },
+    {
+      "id": "spike-2-items",
+      "tags": ["spike", "phase:mid"],
+      "tip": "Cele mai multe carry-uri (ADC, mid) au damage spike la 2 itemuri full. NU forța lupta cu 1 item dacă inamicul are 2. Așteaptă 200-300g pt al doilea item."
+    },
+    {
+      "id": "spike-tank-3-items",
+      "tags": ["spike", "phase:mid", "phase:late", "role:top", "role:sup"],
+      "tip": "Tank-urile spike la 3 itemuri (mythic + 2 defensive). Înainte de 3 itemuri, nu engage solo - ești prea squishy. După 3, ești front-line viabil."
+    },
+    {
+      "id": "spike-jungler-3-buff",
+      "tags": ["spike", "role:jg", "phase:early"],
+      "tip": "Jungle: spike major la nivel 6 (R) + 3 itemuri jungle (Mythic). Ganks pre-6 = lower kill pressure dar setup. Post-6 = ganks letale, urmărește junglerul inamic pe map."
+    },
+    {
+      "id": "roam-when-wave-pushed",
+      "tags": ["roam", "wave", "role:mid", "role:sup"],
+      "tip": "MID/SUP roam când valul tău e push (5 minioni+). NU roam cu val la tine = pierzi 2 valuri (40 CS = 1000g). Push înainte, apoi roam top/bot."
+    },
+    {
+      "id": "roam-with-summs",
+      "tags": ["roam", "phase:mid"],
+      "tip": "Roam doar dacă ai Flash/Ignite UP. Roam fără summs = mort gratis. Verifică summs-urile adversarilor înainte de roam."
+    },
+    {
+      "id": "tp-toplane-objectives",
+      "tags": ["roam", "role:top", "phase:mid"],
+      "tip": "TP pe lupta de drake/herald dacă valul tău e push afară. Dă damage masiv pe obiectiv + flank inamic. Folosește TP-ul DOAR pe obiective sau lupte 5v5, nu pentru 1 minion."
+    },
+    {
+      "id": "engage-cd-checked",
+      "tags": ["teamfight", "phase:mid", "phase:late"],
+      "tip": "Înainte de teamfight, verifică ULT-urile adversarilor (Malphite R, Yasuo R, Karthus R). Dacă ai văzut ulturile cheie deja folosite (lookback 60-90s), engage. Dacă sunt UP, evită."
+    },
+    {
+      "id": "tf-focus-priority",
+      "tags": ["teamfight", "phase:mid", "phase:late"],
+      "tip": "Focus priority în teamfight: 1) cel mai apropiat squishy carry, 2) cel mai damage threat, 3) tank-ul ULTIMUL. Nu pierde timp pe tank dacă e un ADC neward la 200 range."
+    },
+    {
+      "id": "tf-positioning-adc",
+      "tags": ["teamfight", "role:adc", "phase:mid", "phase:late"],
+      "tip": "ADC: stai LA MAX RANGE in spate. Nu te misca - DPS uniform pe target-ul prioritar. Doar Flash dacă vine assassin direct la tine, nu pentru damage."
+    },
+    {
+      "id": "ff-conditions",
+      "tags": ["ff", "phase:late"],
+      "tip": "FF la 20 min DOAR dacă: 3+ inhibitori distruși contra tine, sau 3+ jucători AFK/disconnect, sau echipa moartă în 4 lupte consecutive 5v5 cu adversari full items. Altfel = încearcă side-lane scaling."
+    },
+    {
+      "id": "ff-mental-reset",
+      "tags": ["ff"],
+      "tip": "Nu tilt-uri/flame nici după 5 morți consecutive. 1 lupte câștigată = poți recupera 5k gold deficit. Stai calm, follow team, întreabă 'unde sunt eu cel mai util?'."
+    }
+  ]
+}

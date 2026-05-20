@@ -1,0 +1,74 @@
+<Window x:Class="LolCoach.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LoL Coach"
+        Width="440" Height="290"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Left="40" Top="80"
+        MouseLeftButtonDown="OnDragWindow">
+    <Border CornerRadius="10"
+            Background="#CC101418"
+            BorderBrush="#FFC89B3C"
+            BorderThickness="1"
+            Padding="12">
+        <DockPanel>
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="LoL Coach" Foreground="#FFC89B3C" FontWeight="Bold" FontSize="13" />
+                    <TextBlock x:Name="TxtStatus" Text="  · idle" Foreground="#AAFFFFFF" FontSize="11" Margin="6,2,0,0" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="BtnRefresh" Content="↻" Click="OnRefreshNow"
+                            Background="Transparent" BorderBrush="#FFC89B3C" Foreground="#FFC89B3C"
+                            Width="22" Height="22" Margin="0,0,6,0" Padding="0" />
+                    <Button x:Name="BtnClose" Content="✕" Click="OnClose"
+                            Background="Transparent" BorderBrush="#FF8888" Foreground="#FFAAAA"
+                            Width="22" Height="22" Padding="0" />
+                </StackPanel>
+            </Grid>
+
+            <TextBlock x:Name="TxtGameInfo"
+                       DockPanel.Dock="Top"
+                       Margin="0,6,0,0"
+                       Foreground="#88FFFFFF"
+                       FontSize="11"
+                       Text="Waiting for League client (Live Client Data on :2999)…" />
+
+            <Border DockPanel.Dock="Top" Height="1" Background="#33C89B3C" Margin="0,8,0,8" />
+
+            <TextBlock x:Name="TxtAdvice"
+                       DockPanel.Dock="Top"
+                       Foreground="White"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap"
+                       Text="Start a custom game or queue. Tasks will appear here, one at a time." />
+
+            <Border DockPanel.Dock="Top" Height="1" Background="#22C89B3C" Margin="0,8,0,6" />
+
+            <TextBlock x:Name="TxtHistory"
+                       DockPanel.Dock="Top"
+                       Foreground="#77FFFFFF"
+                       FontSize="11"
+                       TextWrapping="Wrap"
+                       Text="" />
+
+            <Border DockPanel.Dock="Top" Height="1" Background="#22C89B3C" Margin="0,8,0,6" />
+
+            <TextBlock x:Name="TxtLane"
+                       Foreground="#AAFFD700"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap"
+                       Text="" />
+        </DockPanel>
+    </Border>
+</Window>

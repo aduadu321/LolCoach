@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="LolCoach"
+           Manufacturer="LolCoach"
+           Version="1.0.0"
+           UpgradeCode="9b7e8f12-3d4a-4c5b-8e6f-1a2b3c4d5e6f"
+           Scope="perUser"
+           InstallerVersion="500">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="LolCoachIcon.ico" SourceFile="$(var.PublishDir)\LolCoach.exe" />
+    <Property Id="ARPPRODUCTICON" Value="LolCoachIcon.ico" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <ui:WixUI Id="WixUI_InstallDir" />
+
+    <Feature Id="Main" Title="LolCoach" Level="1">
+      <ComponentGroupRef Id="MainFiles" />
+      <ComponentRef Id="StartMenuShortcutCmp" />
+      <ComponentRef Id="DesktopShortcutCmp" />
+    </Feature>
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsRoot" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="LolCoach" />
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="LolCoach" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <Component Id="StartMenuShortcutCmp" Directory="ApplicationProgramsFolder" Guid="a1b2c3d4-e5f6-4708-8909-0a1b2c3d4e5f">
+      <Shortcut Id="StartMenuSC"
+                Name="LolCoach"
+                Description="Real-time League of Legends coach overlay"
+                Target="[INSTALLFOLDER]LolCoach.exe"
+                WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="RemoveAppProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall" />
+      <RegistryValue Root="HKCU" Key="Software\LolCoach" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <Component Id="DesktopShortcutCmp" Directory="DesktopFolder" Guid="b2c3d4e5-f607-4809-8a0b-1c2d3e4f5a6b">
+      <Shortcut Id="DesktopSC"
+                Name="LolCoach"
+                Description="Real-time League of Legends coach overlay"
+                Target="[INSTALLFOLDER]LolCoach.exe"
+                WorkingDirectory="INSTALLFOLDER" />
+      <RegistryValue Root="HKCU" Key="Software\LolCoach" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </Package>
+
+  <Fragment>
+    <ComponentGroup Id="MainFiles" Directory="INSTALLFOLDER">
+      <Files Include="$(var.PublishDir)\**" />
+    </ComponentGroup>
+  </Fragment>
+
+</Wix>

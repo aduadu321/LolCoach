@@ -1,0 +1,18 @@
+# Build outputs
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Installer artifacts
+installer/publish/
+installer/*.wixpdb
+*.msi
+
+# Local cache / logs
+*.log
+
+# OS
+Thumbs.db
+desktop.ini
