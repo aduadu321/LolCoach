@@ -91,13 +91,17 @@ public class CoachService : IDisposable
 
             DECISION PROCEDURE (apply in order, pick the first that fires):
               (1) Combat threat: HP < 40% AND enemy in range OR you see 2+ enemies in your screen → "Recall/Disengage/Cleanse/Heal/Flash to X".
-              (2) Skill window vs lane opponent: their key ability on cooldown (you saw it used in events) → "Trade now: Q+E, his W is down ~Xs".
-              (3) Power spike NOW: you just hit lvl 6/11/16 or finished an item → "All-in lvl 6 — R combo for kill".
-              (4) Gold threshold: gold ≥ next item component cost AND lane is safe → "Recall, buy [specific component]".
-              (5) Objective timer: drake/herald/baron up in <60s → "Push wave, rotate drake in Xs".
-              (6) Wave state: 3+ waves crashing into your turret → "Clear wave under turret, don't lose plates".
-              (7) Side-lane tempo (mid game): no objective, lanes equal → "Push side, ward enemy jungle".
-              (8) Fallback ONLY if nothing else fires: "Last-hit, ward [specific spot] before Xs".
+              (2) Enemy jungler threat (check JUNGLE TRACKER block!): jungler missing/roaming OR last seen near your lane → "Back off, ward river/tribush, don't overextend".
+              (3) Jungler dead OR confirmed opposite side: FREE PUSH WINDOW → "Push hard, take plate, jungler bot side".
+              (4) Skill window vs lane opponent: their key ability on cooldown → "Trade now: Q+E, his W is down ~Xs".
+              (5) Power spike NOW: you just hit lvl 6/11/16 or finished an item → "All-in lvl 6 — R combo for kill".
+              (6) Gold threshold: gold ≥ next item component cost AND lane is safe → "Recall, buy [specific component]".
+              (7) Objective timer: drake/herald/baron up in <60s → "Push wave, rotate drake in Xs".
+              (8) Wave state: 3+ waves crashing into your turret → "Clear wave under turret, don't lose plates".
+              (9) Side-lane tempo (mid game): no objective, lanes equal → "Push side, ward enemy jungle".
+              (10) Fallback ONLY if nothing else fires: "Last-hit, ward [specific spot] before Xs".
+
+            ALWAYS consult the JUNGLE TRACKER block before recommending "push" or "freeze". If the enemy jungler is unaccounted for >60s, NEVER recommend overextending.
 
             STYLE RULES (non-negotiable):
               - Max 90 characters. ONE imperative sentence.

@@ -19,6 +19,7 @@ public partial class MainWindow : Window
     private readonly UggMatchupsService _ugg = new();
     private readonly UggBuildService _builds = new(AppContext.BaseDirectory);
     private readonly TipsService _tips = new();
+    private readonly JungleTrackerService _jungle = new();
     private string _playbook = "";
     private string _playbookForRoster = "";
     private readonly DispatcherTimer _timer;
@@ -152,6 +153,9 @@ public partial class MainWindow : Window
             try
             {
                 var combinedPlaybook = _playbook;
+                var jungleBlock = _jungle.BuildBlock(data);
+                if (!string.IsNullOrWhiteSpace(jungleBlock))
+                    combinedPlaybook = combinedPlaybook + "\n" + jungleBlock;
                 var tipsBlock = _tips.SelectAndFormat(data, max: 4);
                 if (!string.IsNullOrWhiteSpace(tipsBlock))
                     combinedPlaybook = combinedPlaybook + "\n" + tipsBlock;
