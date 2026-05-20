@@ -28,6 +28,7 @@ public partial class MainWindow : Window
     private string _ranksFetchedForGame = "";
     private bool _coachRunning;
     private readonly LinkedList<(DateTime At, string Text)> _history = new();
+    private LiveGameData? _previousData;
 
     private bool _clickThrough;
     private const int GWL_EXSTYLE = -20;
@@ -154,10 +155,13 @@ public partial class MainWindow : Window
                 var tipsBlock = _tips.SelectAndFormat(data, max: 4);
                 if (!string.IsNullOrWhiteSpace(tipsBlock))
                     combinedPlaybook = combinedPlaybook + "\n" + tipsBlock;
+                var deltaBlock = ComputeStateDelta(_previousData, data);
+                var recent = _history.Select(h => h.Text);
                 var advice = await _coach.AdviseAsync(data, chunk =>
                 {
                     Dispatcher.BeginInvoke(new Action(() => TxtAdvice.Text += chunk));
-                }, metaPlaybook: combinedPlaybook);
+                }, metaPlaybook: combinedPlaybook, recentAdvice: recent, deltaBlock: deltaBlock);
+                _previousData = data;
                 if (string.IsNullOrWhiteSpace(TxtAdvice.Text))
                     TxtAdvice.Text = string.IsNullOrWhiteSpace(advice) ? "(no advice)" : advice.Trim();
             }
@@ -283,6 +287,60 @@ public partial class MainWindow : Window
         await Task.CompletedTask;
     }
 
+    private static string ComputeStateDelta(LiveGameData? prev, LiveGameData curr)
+    {
+        if (prev == null) return "";
+        var sb = new System.Text.StringBuilder();
+        var pMe = prev.AllPlayers.FirstOrDefault(p => p.SummonerName == prev.ActivePlayer?.SummonerName);
+        var cMe = curr.AllPlayers.FirstOrDefault(p => p.SummonerName == curr.ActivePlayer?.SummonerName);
+        if (pMe != null && cMe != null)
+        {
+            if (prev.ActivePlayer?.Level != curr.ActivePlayer?.Level)
+                sb.AppendLine($"  YOU LEVELED UP: lvl {prev.ActivePlayer?.Level} → {curr.ActivePlayer?.Level}");
+            var pGold = prev.ActivePlayer?.CurrentGold ?? 0;
+            var cGold = curr.ActivePlayer?.CurrentGold ?? 0;
+            if (cGold - pGold < -200) sb.AppendLine($"  YOU SPENT GOLD: {pGold:F0} → {cGold:F0} (purchase made)");
+            else if (cGold - pGold > 300) sb.AppendLine($"  YOU GAINED GOLD: +{cGold - pGold:F0} (kill/objective)");
+            if ((pMe.Scores?.Kills ?? 0) < (cMe.Scores?.Kills ?? 0))
+                sb.AppendLine("  YOU GOT A KILL");
+            if ((pMe.Scores?.Deaths ?? 0) < (cMe.Scores?.Deaths ?? 0))
+                sb.AppendLine("  YOU DIED");
+            if ((pMe.Scores?.Assists ?? 0) < (cMe.Scores?.Assists ?? 0))
+                sb.AppendLine("  YOU GOT AN ASSIST");
+            var pItems = pMe.Items.Select(i => i.ItemId).ToHashSet();
+            var cItems = cMe.Items.Select(i => i.ItemId).ToHashSet();
+            foreach (var n in cMe.Items.Where(i => !pItems.Contains(i.ItemId)))
+                sb.AppendLine($"  YOU BOUGHT: {n.DisplayName}");
+        }
+        var myTeam = cMe?.Team;
+        foreach (var ce in curr.AllPlayers)
+        {
+            var pe = prev.AllPlayers.FirstOrDefault(x => x.SummonerName == ce.SummonerName);
+            if (pe == null) continue;
+            var sideLabel = ce.Team == myTeam ? "ally" : "enemy";
+            if (pe.Level != ce.Level)
+                sb.AppendLine($"  {sideLabel} {ce.ChampionName} leveled: {pe.Level}→{ce.Level}");
+            if ((pe.Scores?.Kills ?? 0) < (ce.Scores?.Kills ?? 0))
+                sb.AppendLine($"  {sideLabel} {ce.ChampionName} got a kill");
+            if (!pe.IsDead && ce.IsDead)
+                sb.AppendLine($"  {sideLabel} {ce.ChampionName} just DIED (respawn {ce.RespawnTimer:F0}s)");
+            var pItems = pe.Items.Select(i => i.ItemId).ToHashSet();
+            var newItems = ce.Items.Where(i => !pItems.Contains(i.ItemId)).Take(2).ToList();
+            foreach (var n in newItems)
+                sb.AppendLine($"  {sideLabel} {ce.ChampionName} bought: {n.DisplayName}");
+        }
+        // Recent events from live stream (last 15s only — focused window).
+        var time = curr.GameData?.GameTime ?? 0;
+        var recent = curr.Events?.Events?.Where(e => e.EventTime >= time - 15).TakeLast(5).ToList();
+        if (recent?.Count > 0)
+        {
+            sb.AppendLine("  Events in last 15s:");
+            foreach (var e in recent)
+                sb.AppendLine($"    {e.EventName}{(e.KillerName != null ? $" by {e.KillerName}" : "")}{(e.VictimName != null ? $" on {e.VictimName}" : "")}{(e.DragonType != null ? $" ({e.DragonType} drake)" : "")}");
+        }
+        return sb.Length == 0 ? "" : sb.ToString();
+    }
+
     private static string ComputeStateHash(LiveGameData d)
     {
         var me = d.AllPlayers.FirstOrDefault(p => p.SummonerName == d.ActivePlayer?.SummonerName);
@@ -311,7 +369,7 @@ public partial class MainWindow : Window
         public string OllamaUrl { get; set; } = "http://localhost:11434";
         public string OllamaModel { get; set; } = "gemma3:12b";
         public string GroqModel { get; set; } = "llama-3.3-70b-versatile";
-        public string ClaudeModel { get; set; } = "claude-haiku-4-5-20251001";
+        public string ClaudeModel { get; set; } = "claude-sonnet-4-6";
         public int PollIntervalMs { get; set; } = 2000;
         public int CoachCooldownMs { get; set; } = 4000;
         public string Language { get; set; } = "ro";

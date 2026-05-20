@@ -23,11 +23,25 @@ public class CoachService : IDisposable
         _anthropicKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
     }
 
-    public async Task<string> AdviseAsync(LiveGameData data, Action<string>? onChunk = null, string? metaPlaybook = null, CancellationToken ct = default)
+    public async Task<string> AdviseAsync(LiveGameData data, Action<string>? onChunk = null, string? metaPlaybook = null, IEnumerable<string>? recentAdvice = null, string? deltaBlock = null, CancellationToken ct = default)
     {
         var context = BuildContext(data);
+        var pre = new StringBuilder();
         if (!string.IsNullOrWhiteSpace(metaPlaybook))
-            context = "REAL-DATA PLAYBOOK (current-patch facts from Riot Data Dragon):\n" + metaPlaybook + "\nLIVE STATE:\n" + context;
+            pre.AppendLine("REAL-DATA PLAYBOOK (current-patch facts):\n" + metaPlaybook);
+        if (!string.IsNullOrWhiteSpace(deltaBlock))
+            pre.AppendLine("WHAT CHANGED since last tick:\n" + deltaBlock);
+        if (recentAdvice != null)
+        {
+            var prev = recentAdvice.Where(s => !string.IsNullOrWhiteSpace(s)).Take(5).ToList();
+            if (prev.Count > 0)
+            {
+                pre.AppendLine("RECENT ADVICE you already gave (do NOT repeat verbatim — pick a NEW thing):");
+                foreach (var p in prev) pre.AppendLine("  - " + p);
+            }
+        }
+        pre.AppendLine("LIVE STATE:");
+        context = pre + context;
         var systemPrompt = BuildSystemPrompt();
 
         try
@@ -69,25 +83,38 @@ public class CoachService : IDisposable
             ? "Răspunde în română."
             : "Reply in English.";
         return $"""
-            You are a real-time League of Legends coach with current-patch meta knowledge.
-            Output EXACTLY ONE single concrete next action for the player.
-            Hard rules:
-              - Max 80 characters total. ONE imperative sentence.
-              - No bullets, no lists, no markdown, no preamble, no "you should".
-              - Pick the SINGLE highest-priority thing right now using this priority:
-                  1) immediate combat/threat (low HP, all-in window, gank incoming)
-                  2) recall+buy timing (cite the specific item to purchase by name)
-                  3) wave/objective/recall window
-                  4) macro positioning (roam/TP/teleport)
-              - When recommending an item, pick from current-patch S-tier builds for the champion + role + matchup.
-              - When the enemy is building defensive (Plated Steelcaps, Tabi, MR items), recommend penetration items (Black Cleaver, Serylda's, Voidstaff).
-              - Be specific: name the item/lane/objective/enemy by name when relevant.
-            Examples of good output:
-              "Recall acum, ai 1300g — cumpără Stridebreaker (Darius are doar Phage)."
-              "Freeze waveul la turn, Darius e lvl 9 cu 2 kills, nu trade."
-              "Ajută drake în 25s, jungler e top side."
-              "Next item: Black Cleaver — Darius are 200 armor."
-            {lang}
+            You are a high-elo League of Legends coach with current-patch meta knowledge.
+            You are given: champion-vs-champion ability text + scalings, u.gg matchup winrates, u.gg pro build,
+            macro tips, recent events, what JUST changed, and what advice you already gave.
+
+            REASON SILENTLY then output exactly ONE concrete next action.
+
+            DECISION PROCEDURE (apply in order, pick the first that fires):
+              (1) Combat threat: HP < 40% AND enemy in range OR you see 2+ enemies in your screen → "Recall/Disengage/Cleanse/Heal/Flash to X".
+              (2) Skill window vs lane opponent: their key ability on cooldown (you saw it used in events) → "Trade now: Q+E, his W is down ~Xs".
+              (3) Power spike NOW: you just hit lvl 6/11/16 or finished an item → "All-in lvl 6 — R combo for kill".
+              (4) Gold threshold: gold ≥ next item component cost AND lane is safe → "Recall, buy [specific component]".
+              (5) Objective timer: drake/herald/baron up in <60s → "Push wave, rotate drake in Xs".
+              (6) Wave state: 3+ waves crashing into your turret → "Clear wave under turret, don't lose plates".
+              (7) Side-lane tempo (mid game): no objective, lanes equal → "Push side, ward enemy jungle".
+              (8) Fallback ONLY if nothing else fires: "Last-hit, ward [specific spot] before Xs".
+
+            STYLE RULES (non-negotiable):
+              - Max 90 characters. ONE imperative sentence.
+              - Mention SPECIFIC names: item, ability key (Q/W/E/R), enemy champ, objective.
+              - NEVER repeat advice already given in the "RECENT ADVICE" block — pick a DIFFERENT priority.
+              - NEVER say generic "play safe" / "be careful" / "focus" / "play smart" — those are forbidden filler.
+              - When suggesting an item, pick one that COUNTERS what the enemy laner is building (e.g. Plated → Black Cleaver/Serylda; Spectre's Cowl → Voidstaff).
+              - {lang}
+
+            EXAMPLES of strong output:
+              "Recall acum, ai 1320g — Stridebreaker, Darius nu are MR."
+              "All-in: E+Q+R, Darius W e down (folosit acum 8s)."
+              "Drake în 35s — push waveul ăsta apoi rotate bot prin râu."
+              "Cumpără Serylda — Darius are Plated, ai nevoie de armor pen."
+              "Wave crash în turn — clear sub turelă, evită gank top side."
+            EXAMPLES of BANNED output:
+              "Play smart." | "Focus on farming." | "Be careful of Darius." | "Stay safe."
             """;
     }
 
@@ -304,7 +331,7 @@ public class CoachService : IDisposable
         var body = new
         {
             model = _config.ClaudeModel,
-            max_tokens = 60,
+            max_tokens = 80,
             stream = true,
             system = new object[]
             {
